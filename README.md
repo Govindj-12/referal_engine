@@ -1,4 +1,4 @@
-# 🚀 Cycle-Safe Referral Engine
+# Cycle-Safe Referral Engine
 
 A production-grade DAG-based referral system with real-time cycle detection, fraud prevention, reward propagation, and a live React dashboard — all in Docker.
 
@@ -8,84 +8,29 @@ A production-grade DAG-based referral system with real-time cycle detection, fra
 docker compose up --build
 ```
 
-That's it. Everything starts automatically:
-- Seeds demo data (users, referrals, fraud scenarios)
-- Starts backend API on port 8000
-- Builds and serves the React dashboard
-- Nginx reverse proxy on port 80
+| Service   | URL                        |
+|-----------|----------------------------|
+| Dashboard | http://localhost           |
+| API Docs  | http://localhost:8000/docs |
+| Backend   | http://localhost/api       |
 
-### Access
+## Documentation
 
-| Service   | URL                          |
-|-----------|------------------------------|
-| Dashboard | http://localhost             |
-| API docs  | http://localhost:8000/docs   |
-| Backend   | http://localhost/api         |
+All project documentation lives in the [`docs/`](docs/) folder:
 
----
+| Document | Description |
+|----------|-------------|
+| [README](docs/README.md) | Full project overview and feature list |
+| [Architecture](docs/ARCHITECTURE.md) | System design, stack, data model, and algorithms |
+| [Setup Guide](docs/SETUP.md) | Local development setup and Docker configuration |
+| [API Reference](docs/API.md) | Complete API endpoint documentation with examples |
+| [Environment Variables](docs/ENVIRONMENT.md) | All configurable env vars and their defaults |
+| [Database Schema](docs/DATABASE.md) | Tables, relationships, and migration notes |
+| [Fraud Detection](docs/FRAUD_DETECTION.md) | Deep dive into fraud prevention mechanisms |
+| [WebSocket Events](docs/WEBSOCKET.md) | Real-time event stream protocol and usage |
+| [Deployment](docs/DEPLOYMENT.md) | Production deployment guide |
+| [Contributing](docs/CONTRIBUTING.md) | Contribution guidelines and development workflow |
 
-## Features
+## License
 
-### ✅ DAG Cycle Detection (<100ms)
-- Uses NetworkX DiGraph + `is_directed_acyclic_graph()` check
-- Detects multi-hop cycles: A→B→C→A
-- Rejected users assigned as root nodes automatically
-
-### ✅ Fraud Detection
-1. **Self-referral** — immediate reject
-2. **Velocity limit** — Redis-backed rate limiting per referrer
-3. **Duplicate detection** — SQL dedup check
-
-### ✅ Reward Engine
-- Propagates rewards up to 3 levels (configurable)
-- Depth-decayed amounts (L1=10%, L2=5%, L3=3.3% of base ₹100)
-- Full audit log in `reward_logs` table
-
-### ✅ Dashboard
-- Key metrics panel (7 KPIs)
-- D3 force-directed graph viewer with depth control
-- Fraud monitoring panel with reason breakdown
-- Activity feed (DB + live WebSocket events)
-- Referrals table with filters
-- Users panel with reward history
-- Reward simulator (bonus)
-- Claim interface for live testing
-
-### ✅ Bonus Features
-- Hybrid graph mode (secondary non-reward edges)
-- Temporal expiry on referrals
-- Simulation tool with cost projection chart
-- Real-time WebSocket event stream
-
----
-
-## Environment Variables
-
-| Variable        | Default | Description                    |
-|-----------------|---------|--------------------------------|
-| REWARD_DEPTH    | 3       | Max levels for reward propagation |
-| REWARD_PERCENT  | 10      | Base reward percentage          |
-| VELOCITY_LIMIT  | 5       | Max referrals per window        |
-| VELOCITY_WINDOW | 60      | Rate limit window (seconds)     |
-
----
-
-## API Quick Reference
-
-```bash
-# Claim a referral
-curl -X POST http://localhost/api/referral/claim \
-  -H "Content-Type: application/json" \
-  -d '{"new_user_id": "...", "referrer_id": "..."}'
-
-# Get user graph
-curl http://localhost/api/user/{id}/graph?depth=3
-
-# Dashboard metrics
-curl http://localhost/api/dashboard/metrics
-
-# Fraud flags
-curl http://localhost/api/fraud/flags
-```
-
-Full interactive docs: http://localhost:8000/docs
+MIT
